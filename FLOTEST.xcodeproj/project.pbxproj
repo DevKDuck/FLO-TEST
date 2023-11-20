@@ -18,7 +18,10 @@
 		8C4C2F652B0B38E100389B70 /* FLOTESTUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F642B0B38E100389B70 /* FLOTESTUITests.swift */; };
 		8C4C2F672B0B38E100389B70 /* FLOTESTUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F662B0B38E100389B70 /* FLOTESTUITestsLaunchTests.swift */; };
 		8C4C2F742B0B394600389B70 /* SplashScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F732B0B394600389B70 /* SplashScreenVC.swift */; };
-		8C4C2F762B0B3A4200389B70 /* FLO_Splash-Img3x(1242x2688).png in Resources */ = {isa = PBXBuildFile; fileRef = 8C4C2F752B0B3A4200389B70 /* FLO_Splash-Img3x(1242x2688).png */; };
+		8C4C2F7B2B0B460100389B70 /* MusicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F7A2B0B460100389B70 /* MusicAPI.swift */; };
+		8C4C2F7F2B0B482000389B70 /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F7E2B0B482000389B70 /* Repository.swift */; };
+		8C4C2F812B0B4C6D00389B70 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F802B0B4C6D00389B70 /* Service.swift */; };
+		8C4C2F832B0B4D0C00389B70 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F822B0B4D0C00389B70 /* Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,7 +57,11 @@
 		8C4C2F642B0B38E100389B70 /* FLOTESTUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FLOTESTUITests.swift; sourceTree = "<group>"; };
 		8C4C2F662B0B38E100389B70 /* FLOTESTUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FLOTESTUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		8C4C2F732B0B394600389B70 /* SplashScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenVC.swift; sourceTree = "<group>"; };
-		8C4C2F752B0B3A4200389B70 /* FLO_Splash-Img3x(1242x2688).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "FLO_Splash-Img3x(1242x2688).png"; path = "../../../../Downloads/FLO_Splash-Img3x(1242x2688).png"; sourceTree = "<group>"; };
+		8C4C2F782B0B452D00389B70 /* FLO_Splash-Img3x(1242x2688).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FLO_Splash-Img3x(1242x2688).png"; sourceTree = "<group>"; };
+		8C4C2F7A2B0B460100389B70 /* MusicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAPI.swift; sourceTree = "<group>"; };
+		8C4C2F7E2B0B482000389B70 /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
+		8C4C2F802B0B4C6D00389B70 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		8C4C2F822B0B4D0C00389B70 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +112,7 @@
 		8C4C2F3F2B0B38DE00389B70 /* FLOTEST */ = {
 			isa = PBXGroup;
 			children = (
+				8C4C2F772B0B452200389B70 /* Source */,
 				8C4C2F402B0B38DE00389B70 /* AppDelegate.swift */,
 				8C4C2F422B0B38DE00389B70 /* SceneDelegate.swift */,
 				8C4C2F442B0B38DE00389B70 /* ViewController.swift */,
@@ -114,7 +122,6 @@
 				8C4C2F512B0B38E000389B70 /* Info.plist */,
 				8C4C2F492B0B38DE00389B70 /* FLOTEST.xcdatamodeld */,
 				8C4C2F732B0B394600389B70 /* SplashScreenVC.swift */,
-				8C4C2F752B0B3A4200389B70 /* FLO_Splash-Img3x(1242x2688).png */,
 			);
 			path = FLOTEST;
 			sourceTree = "<group>";
@@ -134,6 +141,42 @@
 				8C4C2F662B0B38E100389B70 /* FLOTESTUITestsLaunchTests.swift */,
 			);
 			path = FLOTESTUITests;
+			sourceTree = "<group>";
+		};
+		8C4C2F772B0B452200389B70 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				8C4C2F7C2B0B46DE00389B70 /* UI Layers */,
+				8C4C2F792B0B45DB00389B70 /* API */,
+				8C4C2F782B0B452D00389B70 /* FLO_Splash-Img3x(1242x2688).png */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		8C4C2F792B0B45DB00389B70 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				8C4C2F7A2B0B460100389B70 /* MusicAPI.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		8C4C2F7C2B0B46DE00389B70 /* UI Layers */ = {
+			isa = PBXGroup;
+			children = (
+				8C4C2F7D2B0B471B00389B70 /* MusicPlay */,
+			);
+			path = "UI Layers";
+			sourceTree = "<group>";
+		};
+		8C4C2F7D2B0B471B00389B70 /* MusicPlay */ = {
+			isa = PBXGroup;
+			children = (
+				8C4C2F7E2B0B482000389B70 /* Repository.swift */,
+				8C4C2F802B0B4C6D00389B70 /* Service.swift */,
+				8C4C2F822B0B4D0C00389B70 /* Model.swift */,
+			);
+			path = MusicPlay;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -240,7 +283,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8C4C2F762B0B3A4200389B70 /* FLO_Splash-Img3x(1242x2688).png in Resources */,
 				8C4C2F502B0B38E000389B70 /* LaunchScreen.storyboard in Resources */,
 				8C4C2F4D2B0B38E000389B70 /* Assets.xcassets in Resources */,
 				8C4C2F482B0B38DE00389B70 /* Main.storyboard in Resources */,
@@ -268,6 +310,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C4C2F832B0B4D0C00389B70 /* Model.swift in Sources */,
+				8C4C2F7F2B0B482000389B70 /* Repository.swift in Sources */,
+				8C4C2F812B0B4C6D00389B70 /* Service.swift in Sources */,
+				8C4C2F7B2B0B460100389B70 /* MusicAPI.swift in Sources */,
 				8C4C2F452B0B38DE00389B70 /* ViewController.swift in Sources */,
 				8C4C2F4B2B0B38DE00389B70 /* FLOTEST.xcdatamodeld in Sources */,
 				8C4C2F412B0B38DE00389B70 /* AppDelegate.swift in Sources */,
