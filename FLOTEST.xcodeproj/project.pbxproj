@@ -17,6 +17,8 @@
 		8C4C2F5B2B0B38E100389B70 /* FLOTESTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F5A2B0B38E100389B70 /* FLOTESTTests.swift */; };
 		8C4C2F652B0B38E100389B70 /* FLOTESTUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F642B0B38E100389B70 /* FLOTESTUITests.swift */; };
 		8C4C2F672B0B38E100389B70 /* FLOTESTUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F662B0B38E100389B70 /* FLOTESTUITestsLaunchTests.swift */; };
+		8C4C2F742B0B394600389B70 /* SplashScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F732B0B394600389B70 /* SplashScreenVC.swift */; };
+		8C4C2F762B0B3A4200389B70 /* FLO_Splash-Img3x(1242x2688).png in Resources */ = {isa = PBXBuildFile; fileRef = 8C4C2F752B0B3A4200389B70 /* FLO_Splash-Img3x(1242x2688).png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,8 @@
 		8C4C2F602B0B38E100389B70 /* FLOTESTUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FLOTESTUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C4C2F642B0B38E100389B70 /* FLOTESTUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FLOTESTUITests.swift; sourceTree = "<group>"; };
 		8C4C2F662B0B38E100389B70 /* FLOTESTUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FLOTESTUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		8C4C2F732B0B394600389B70 /* SplashScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenVC.swift; sourceTree = "<group>"; };
+		8C4C2F752B0B3A4200389B70 /* FLO_Splash-Img3x(1242x2688).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "FLO_Splash-Img3x(1242x2688).png"; path = "../../../../Downloads/FLO_Splash-Img3x(1242x2688).png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +113,8 @@
 				8C4C2F4E2B0B38E000389B70 /* LaunchScreen.storyboard */,
 				8C4C2F512B0B38E000389B70 /* Info.plist */,
 				8C4C2F492B0B38DE00389B70 /* FLOTEST.xcdatamodeld */,
+				8C4C2F732B0B394600389B70 /* SplashScreenVC.swift */,
+				8C4C2F752B0B3A4200389B70 /* FLO_Splash-Img3x(1242x2688).png */,
 			);
 			path = FLOTEST;
 			sourceTree = "<group>";
@@ -234,6 +240,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C4C2F762B0B3A4200389B70 /* FLO_Splash-Img3x(1242x2688).png in Resources */,
 				8C4C2F502B0B38E000389B70 /* LaunchScreen.storyboard in Resources */,
 				8C4C2F4D2B0B38E000389B70 /* Assets.xcassets in Resources */,
 				8C4C2F482B0B38DE00389B70 /* Main.storyboard in Resources */,
@@ -264,6 +271,7 @@
 				8C4C2F452B0B38DE00389B70 /* ViewController.swift in Sources */,
 				8C4C2F4B2B0B38DE00389B70 /* FLOTEST.xcdatamodeld in Sources */,
 				8C4C2F412B0B38DE00389B70 /* AppDelegate.swift in Sources */,
+				8C4C2F742B0B394600389B70 /* SplashScreenVC.swift in Sources */,
 				8C4C2F432B0B38DE00389B70 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
