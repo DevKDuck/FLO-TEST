@@ -6,10 +6,14 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
     let repository = Repository()
+    
+    var playURL: String?
+    var player: AVAudioPlayer?
     
     //앨범 커버 이미지, 앨범명, 아티스트명, 곡명이
     
@@ -40,7 +44,48 @@ class ViewController: UIViewController {
     }() //곡 명
     
     
-//    lazy var playbutton
+    lazy var playbutton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        
+        config.image = UIImage(systemName: "play.circle")
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: view.bounds.width / 7)
+        config.background = .clear()
+        let btn = UIButton(configuration: config)
+        btn.addTarget(self, action: #selector(tapPlaybutton(_:)), for: .touchUpInside)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.contentMode = .scaleAspectFit
+        return btn
+    }()
+    
+    @objc func tapPlaybutton(_ sender: UIButton){
+        //play일떄
+        sender.isSelected.toggle()
+        
+        sender.isSelected ? play() : stop()
+        let playOrStopImage = sender.isSelected ? UIImage(systemName: "stop.circle") : UIImage(systemName: "play.circle")
+        sender.setImage(playOrStopImage, for: .normal)
+        //pause일떄
+    }
+    
+    func play(){
+        DispatchQueue.global().async{
+            guard let url = self.playURL else { return}
+            guard let url = URL(string: url) else { return}
+            do{
+                let audioData = try Data(contentsOf: url)
+                self.player = try  AVAudioPlayer(data: audioData)
+                self.player?.play()
+            }
+            catch{
+                
+            }
+            
+        }
+    }
+    
+    func stop(){
+        player?.stop()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,6 +107,7 @@ class ViewController: UIViewController {
                 self?.songName.text = ent.title
                 self?.artistName.text = ent.singer
                 self?.albumName.text = ent.album
+                self?.playURL = ent.file
             }
             
             
@@ -86,6 +132,7 @@ class ViewController: UIViewController {
         view.addSubview(albumName)
         view.addSubview(artistName)
         view.addSubview(songName)
+        view.addSubview(playbutton)
         
         NSLayoutConstraint.activate([
             
@@ -108,6 +155,15 @@ class ViewController: UIViewController {
             
             albumCoverImage.bottomAnchor.constraint(equalTo: songName.topAnchor, constant: -5), //수정 필요
             albumCoverImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            playbutton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            playbutton.topAnchor.constraint(equalTo: albumName.bottomAnchor, constant: 5), //수정 필요
+            
+            playbutton.heightAnchor.constraint(equalToConstant: view.bounds.width / 5),
+            playbutton.widthAnchor.constraint(equalToConstant: view.bounds.width / 5),
+            
+            
+            
             
             
             albumCoverImage.heightAnchor.constraint(equalToConstant: view.bounds.width / 1.25),
