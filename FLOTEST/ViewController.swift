@@ -53,6 +53,21 @@ class ViewController: UIViewController {
         return name
     }() //곡 명
     
+    lazy var seekbar: UISlider = {
+       let slider = UISlider()
+        slider.addTarget(self, action: #selector(sliderValueDidChange(_:)), for: .valueChanged)
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        return slider
+    }()
+    
+    
+    @objc func sliderValueDidChange(_ sender: UISlider) {
+        let sliderValue = sender.value
+        // Slider의 값이 변경될 때 수행할 작업을 여기에 구현하세요.
+        print("Slider value changed: \(sliderValue)")
+        // 예를
+    }
+    
     
     lazy var playbutton: UIButton = {
         var config = UIButton.Configuration.plain()
@@ -82,78 +97,116 @@ class ViewController: UIViewController {
     
     var timer: Timer?
     var startTime: Date?
-    
-    @objc func updateTimer(){
-       
-        guard let startTime = startTime else {return print("Error: Starttime is nil")}
-        let currentTime =  Date().timeIntervalSince(startTime)
-        
-        let minutes = Int(currentTime/60) //분
-        let seconds = Int(currentTime) % 60 //초
-        let milliseconds = Int((currentTime * 1000).truncatingRemainder(dividingBy: 1000)) //밀리초
-        let timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
-        print(timeString)
-        
-        
-    }
+    var stopTime: Date?
+    var stackTime: TimeInterval?
     
     func pauseTimer(){
         timer?.invalidate()
     }
     
     func playAudio(){
-        startTime = Date() //시작시간 설정
-        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-            DispatchQueue.global().async{
-                guard let url = self.playURL else { return}
-                guard let url = URL(string: url) else { return}
-                do{
-                    let audioData = try Data(contentsOf: url)
-                    
-                    self.player = try  AVAudioPlayer(data: audioData)
-                    self.player?.prepareToPlay()
-                    self.player?.play()
-                }
-                catch{
-                    
-                }
-                
-            }
+        if startTime == nil{
+            startTime = Date()
+        }
+        timer = Timer.scheduledTimer(timeInterval: 0.001, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+        
+        player?.prepareToPlay()
+        player?.play()
+
             
     }
     
+    
+    
+    @objc func updateTimer(){
+    
+            guard let startTime = startTime else {return print("Error: Starttime is nil")}
+            let currentTime =  Date().timeIntervalSince(startTime) //두 사이 간격
+        if let stackT = stackTime {
+            let t = currentTime + stackT
+            let minutes = Int(t/60) //분
+            let seconds = Int(t) % 60 //초
+            let milliseconds = Int((t * 1000).truncatingRemainder(dividingBy: 1000)) //밀리초
+        
+            var timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
+            DispatchQueue.main.async{ [weak self] in
+                self?.lyric.text = timeString
+            }
+        
+        }else{
+            let minutes = Int(currentTime/60) //분
+            let seconds = Int(currentTime) % 60 //초
+            let milliseconds = Int((currentTime * 1000).truncatingRemainder(dividingBy: 1000)) //밀리초
+            
+            var timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
+            
+            //        timeString += stackTime ?? "00:00:000"
+            
+            
+            
+            
+            
+            DispatchQueue.main.async{ [weak self] in
+                self?.lyric.text = timeString
+            }
+        }
+            
+    }
+    /*
+     시작
+     1- 시작시간 객체
+     2- 스탑시간 객체
+     
+     1~2 를 구해
+     
+     시작~멈춘 시간을
+    시작
+     */
+        
     func pauseOrResumeAudio(){ //플레이어가 플레이하고 있을 경우
         timer?.invalidate()
         player?.pause()
+        let timeString = lyric.text
+      
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm:ss"
+        guard let timeString = timeString else {return}
+        if let date = dateFormatter.date(from: timeString) {
+            // Date 객체 생성
+            let calendar = Calendar.current
+            let dateComponents = calendar.dateComponents([.hour, .minute, .second, .nanosecond], from: date)
+            
+            if let finalDate = calendar.date(from: dateComponents) {
+                // finalDate를 사용하여 Date 객체를 얻을 수 있음
+                stackTime = finalDate.timeIntervalSince1970
+                
+            }
+        }
+
+        
     }
     
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        
-        setLayoutConstraints()
-        // Do any additional setup after loading the view.
-        
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         repository.fetchMusicDate{ [weak self]  ent in
-            
-            let url = URL(string: ent.image)
-            guard let url = url else {
-                print("entity url error")
-                return
-            }
-            
-            
+   
             DispatchQueue.main.async{
                 self?.songName.text = ent.title
                 self?.artistName.text = ent.singer
                 self?.albumName.text = ent.album
-                self?.playURL = ent.file
-                print(ent.lyrics)
+                
+                self?.downloadAudioFromURL(ent.file)
+                
             }
             
             
             DispatchQueue.global(qos: .default).async{
+                let url = URL(string: ent.image)
+                guard let url = url else {
+                      print("entity url error")
+                      return
+                }
+                
                 if let data = try? Data(contentsOf: url){
                     print("Data:\(data)")
                     if let image = UIImage(data: data){
@@ -168,6 +221,43 @@ class ViewController: UIViewController {
         }
     }
     
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        
+        setLayoutConstraints()
+        // Do any additional setup after loading the view.
+        
+        
+    }
+    
+    func downloadAudioFromURL(_ url: String) {
+        guard let audioURL = URL(string: url) else { return }
+
+        let task = URLSession.shared.dataTask(with: audioURL) { [weak self] (data, response, error) in
+            guard let self = self, let data = data, error == nil else {
+                print("Failed to download audio:", error?.localizedDescription ?? "")
+                return
+            }
+
+            DispatchQueue.main.async {
+                do {
+                    // AVAudioPlayer로 오디오 데이터를 재생
+                    self.player = try AVAudioPlayer(data: data)
+                    self.seekbar.maximumValue = Float(self.player?.duration ?? 0)
+                } catch {
+                    print("Failed to play audio:", error.localizedDescription)
+                }
+            }
+        }
+        task.resume()
+    }
+
+    
+
+    
+    
     private func setLayoutConstraints(){
         //뷰 추가
         view.addSubview(albumCoverImage)
@@ -176,6 +266,7 @@ class ViewController: UIViewController {
         view.addSubview(songName)
         view.addSubview(playbutton)
         view.addSubview(lyric)
+        view.addSubview(seekbar)
         
         NSLayoutConstraint.activate([
             
@@ -212,25 +303,11 @@ class ViewController: UIViewController {
             lyric.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             lyric.topAnchor.constraint(equalTo: playbutton.bottomAnchor, constant: 5),
             
-
-            
-            
-            
-//            albumCoverImage.topAnchor.constraint(equalTo: <#T##NSLayoutAnchor<NSLayoutYAxisAnchor>#>, constant: <#T##CGFloat#>)
-//            albumCoverImage
-//            albumCoverImage
-//            
-//            
-//            albumName
-//            
-//            
-//            
-//            artistName
-//            
-//            
-//            
-//            songName
-//                
+//            seekbar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            seekbar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            seekbar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            seekbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            seekbar.heightAnchor.constraint(equalToConstant: 44)
         ])
         
         
