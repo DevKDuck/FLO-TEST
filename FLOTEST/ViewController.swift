@@ -27,11 +27,13 @@ class ViewController: UIViewController {
     let albumName: UILabel = {
         let name = UILabel()
         name.translatesAutoresizingMaskIntoConstraints = false
+        name.textColor = .darkGray
         return name
     }() //앨범 명
     
     let artistName: UILabel = {
         let name = UILabel()
+        name.textColor = .darkGray
         name.translatesAutoresizingMaskIntoConstraints = false
         return name
     }() //아티스트명
@@ -39,6 +41,14 @@ class ViewController: UIViewController {
     
     let songName: UILabel = {
         let name = UILabel()
+        name.textColor = .darkGray
+        name.translatesAutoresizingMaskIntoConstraints = false
+        return name
+    }() //곡 명
+    
+    let lyric: UILabel = {
+        let name = UILabel()
+        name.textColor = .darkGray
         name.translatesAutoresizingMaskIntoConstraints = false
         return name
     }() //곡 명
@@ -57,36 +67,67 @@ class ViewController: UIViewController {
         return btn
     }()
     
+    var k: Bool?
+    
     @objc func tapPlaybutton(_ sender: UIButton){
         //play일떄
         sender.isSelected.toggle()
-        
-        sender.isSelected ? play() : stop()
+        sender.isSelected ? playAudio() : pauseOrResumeAudio()
+//        sender.isSelected ? startTimer() : pauseTimer()
         let playOrStopImage = sender.isSelected ? UIImage(systemName: "stop.circle") : UIImage(systemName: "play.circle")
         sender.setImage(playOrStopImage, for: .normal)
         //pause일떄
+        
     }
     
-    func play(){
-        DispatchQueue.global().async{
-            guard let url = self.playURL else { return}
-            guard let url = URL(string: url) else { return}
-            do{
-                let audioData = try Data(contentsOf: url)
-                self.player = try  AVAudioPlayer(data: audioData)
-                self.player?.play()
-            }
-            catch{
+    var timer: Timer?
+    var startTime: Date?
+    
+    @objc func updateTimer(){
+       
+        guard let startTime = startTime else {return print("Error: Starttime is nil")}
+        let currentTime =  Date().timeIntervalSince(startTime)
+        
+        let minutes = Int(currentTime/60) //분
+        let seconds = Int(currentTime) % 60 //초
+        let milliseconds = Int((currentTime * 1000).truncatingRemainder(dividingBy: 1000)) //밀리초
+        let timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
+        print(timeString)
+        
+        
+    }
+    
+    func pauseTimer(){
+        timer?.invalidate()
+    }
+    
+    func playAudio(){
+        startTime = Date() //시작시간 설정
+        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+            DispatchQueue.global().async{
+                guard let url = self.playURL else { return}
+                guard let url = URL(string: url) else { return}
+                do{
+                    let audioData = try Data(contentsOf: url)
+                    
+                    self.player = try  AVAudioPlayer(data: audioData)
+                    self.player?.prepareToPlay()
+                    self.player?.play()
+                }
+                catch{
+                    
+                }
                 
             }
             
-        }
     }
     
-    func stop(){
-        player?.stop()
+    func pauseOrResumeAudio(){ //플레이어가 플레이하고 있을 경우
+        timer?.invalidate()
+        player?.pause()
     }
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -108,6 +149,7 @@ class ViewController: UIViewController {
                 self?.artistName.text = ent.singer
                 self?.albumName.text = ent.album
                 self?.playURL = ent.file
+                print(ent.lyrics)
             }
             
             
@@ -133,6 +175,7 @@ class ViewController: UIViewController {
         view.addSubview(artistName)
         view.addSubview(songName)
         view.addSubview(playbutton)
+        view.addSubview(lyric)
         
         NSLayoutConstraint.activate([
             
@@ -153,7 +196,7 @@ class ViewController: UIViewController {
             albumName.topAnchor.constraint(equalTo: artistName.bottomAnchor, constant: 5), //수정 필요
             
             
-            albumCoverImage.bottomAnchor.constraint(equalTo: songName.topAnchor, constant: -5), //수정 필요
+            albumCoverImage.bottomAnchor.constraint(equalTo: songName.topAnchor, constant: -40), //수정 필요
             albumCoverImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             playbutton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -162,12 +205,12 @@ class ViewController: UIViewController {
             playbutton.heightAnchor.constraint(equalToConstant: view.bounds.width / 5),
             playbutton.widthAnchor.constraint(equalToConstant: view.bounds.width / 5),
             
-            
-            
-            
-            
+
             albumCoverImage.heightAnchor.constraint(equalToConstant: view.bounds.width / 1.25),
             albumCoverImage.widthAnchor.constraint(equalToConstant: view.bounds.width / 1.25),
+            
+            lyric.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            lyric.topAnchor.constraint(equalTo: playbutton.bottomAnchor, constant: 5),
             
 
             
