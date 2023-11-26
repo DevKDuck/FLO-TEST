@@ -14,8 +14,7 @@ class ViewController: UIViewController {
     
     var playURL: String?
     var player: AVAudioPlayer?
-    
-    //앨범 커버 이미지, 앨범명, 아티스트명, 곡명이
+    var timer: Timer?
     
     let albumCoverImage: UIImageView = {
         let img = UIImageView()
@@ -51,22 +50,48 @@ class ViewController: UIViewController {
         name.textColor = .darkGray
         name.translatesAutoresizingMaskIntoConstraints = false
         return name
-    }() //곡 명
+    }() //가사
     
     lazy var seekbar: UISlider = {
-       let slider = UISlider()
+        let slider = UISlider()
         slider.addTarget(self, action: #selector(sliderValueDidChange(_:)), for: .valueChanged)
         slider.translatesAutoresizingMaskIntoConstraints = false
         return slider
     }()
     
-    
+
     @objc func sliderValueDidChange(_ sender: UISlider) {
-        let sliderValue = sender.value
-        // Slider의 값이 변경될 때 수행할 작업을 여기에 구현하세요.
-        print("Slider value changed: \(sliderValue)")
-        // 예를
+        guard let player = player else {
+            print("player Nil")
+            return}
+        
+        if player.isPlaying{
+            player.stop()
+            timer?.invalidate()
+        }
+        
+        let value = sender.value
+        let duration = player.duration
+        let timeToSeek = TimeInterval(value) * duration
+        
+        player.currentTime = timeToSeek
+        timeFormat()
+        playAudio()
     }
+    
+    func timeFormat(){
+        guard let player = player else { return}
+        let milliseconds = Int((player.currentTime.truncatingRemainder(dividingBy: 1)) * 1000)
+        let seconds = Int(player.currentTime) % 60
+        let minutes = Int(player.currentTime) / 60
+        
+        let timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
+     
+        DispatchQueue.main.async { [weak self] in
+            self?.lyric.text = timeString
+        }
+    } //노래의 위치에 따라 시간을 파악하는 메서드
+
     
     
     lazy var playbutton: UIButton = {
@@ -82,114 +107,50 @@ class ViewController: UIViewController {
         return btn
     }()
     
-    var k: Bool?
     
     @objc func tapPlaybutton(_ sender: UIButton){
         //play일떄
         sender.isSelected.toggle()
-        sender.isSelected ? playAudio() : pauseOrResumeAudio()
-//        sender.isSelected ? startTimer() : pauseTimer()
-        let playOrStopImage = sender.isSelected ? UIImage(systemName: "stop.circle") : UIImage(systemName: "play.circle")
-        sender.setImage(playOrStopImage, for: .normal)
-        //pause일떄
+        sender.isSelected ? playAudio() : pauseAudio()
+        //        sender.isSelected ? startTimer() : pauseTimer()
         
     }
-    
-    var timer: Timer?
-    var startTime: Date?
-    var stopTime: Date?
-    var stackTime: TimeInterval?
+
     
     func pauseTimer(){
         timer?.invalidate()
     }
     
     func playAudio(){
-        if startTime == nil{
-            startTime = Date()
-        }
-        timer = Timer.scheduledTimer(timeInterval: 0.001, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-        
+        playbutton.isSelected = true
+        playbutton.setImage(UIImage(systemName: "stop.circle"), for: .normal)
+        timer = Timer.scheduledTimer(timeInterval: 0.001, target: self, selector: #selector(timeElapsedAction), userInfo: nil, repeats: true)
         player?.prepareToPlay()
         player?.play()
-
-            
+        
     }
     
     
-    
-    @objc func updateTimer(){
-    
-            guard let startTime = startTime else {return print("Error: Starttime is nil")}
-            let currentTime =  Date().timeIntervalSince(startTime) //두 사이 간격
-        if let stackT = stackTime {
-            let t = currentTime + stackT
-            let minutes = Int(t/60) //분
-            let seconds = Int(t) % 60 //초
-            let milliseconds = Int((t * 1000).truncatingRemainder(dividingBy: 1000)) //밀리초
-        
-            var timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
-            DispatchQueue.main.async{ [weak self] in
-                self?.lyric.text = timeString
-            }
-        
-        }else{
-            let minutes = Int(currentTime/60) //분
-            let seconds = Int(currentTime) % 60 //초
-            let milliseconds = Int((currentTime * 1000).truncatingRemainder(dividingBy: 1000)) //밀리초
-            
-            var timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
-            
-            //        timeString += stackTime ?? "00:00:000"
-            
-            
-            
-            
-            
-            DispatchQueue.main.async{ [weak self] in
-                self?.lyric.text = timeString
-            }
+    @objc func timeElapsedAction() {
+        guard let player = player else { return}
+        DispatchQueue.main.async{
+            self.seekbar.value += Float((1 / player.duration) / 1000)
         }
-            
+        timeFormat()
     }
-    /*
-     시작
-     1- 시작시간 객체
-     2- 스탑시간 객체
-     
-     1~2 를 구해
-     
-     시작~멈춘 시간을
-    시작
-     */
-        
-    func pauseOrResumeAudio(){ //플레이어가 플레이하고 있을 경우
+    
+    
+    func pauseAudio(){ //플레이어가 플레이하고 있을 경우
+        playbutton.isSelected = false
+        playbutton.setImage(UIImage(systemName: "play.circle"), for: .normal)
         timer?.invalidate()
         player?.pause()
-        let timeString = lyric.text
-      
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm:ss"
-        guard let timeString = timeString else {return}
-        if let date = dateFormatter.date(from: timeString) {
-            // Date 객체 생성
-            let calendar = Calendar.current
-            let dateComponents = calendar.dateComponents([.hour, .minute, .second, .nanosecond], from: date)
-            
-            if let finalDate = calendar.date(from: dateComponents) {
-                // finalDate를 사용하여 Date 객체를 얻을 수 있음
-                stackTime = finalDate.timeIntervalSince1970
-                
-            }
-        }
-
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         repository.fetchMusicDate{ [weak self]  ent in
-   
+            
             DispatchQueue.main.async{
                 self?.songName.text = ent.title
                 self?.artistName.text = ent.singer
@@ -203,8 +164,8 @@ class ViewController: UIViewController {
             DispatchQueue.global(qos: .default).async{
                 let url = URL(string: ent.image)
                 guard let url = url else {
-                      print("entity url error")
-                      return
+                    print("entity url error")
+                    return
                 }
                 
                 if let data = try? Data(contentsOf: url){
@@ -221,7 +182,7 @@ class ViewController: UIViewController {
         }
     }
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -234,18 +195,18 @@ class ViewController: UIViewController {
     
     func downloadAudioFromURL(_ url: String) {
         guard let audioURL = URL(string: url) else { return }
-
+        
         let task = URLSession.shared.dataTask(with: audioURL) { [weak self] (data, response, error) in
             guard let self = self, let data = data, error == nil else {
                 print("Failed to download audio:", error?.localizedDescription ?? "")
                 return
             }
-
+            
             DispatchQueue.main.async {
                 do {
                     // AVAudioPlayer로 오디오 데이터를 재생
                     self.player = try AVAudioPlayer(data: data)
-                    self.seekbar.maximumValue = Float(self.player?.duration ?? 0)
+                    //                    self.seekbar.maximumValue = Float(self.player?.duration ?? 0)
                 } catch {
                     print("Failed to play audio:", error.localizedDescription)
                 }
@@ -253,9 +214,9 @@ class ViewController: UIViewController {
         }
         task.resume()
     }
-
     
-
+    
+    
     
     
     private func setLayoutConstraints(){
@@ -296,14 +257,14 @@ class ViewController: UIViewController {
             playbutton.heightAnchor.constraint(equalToConstant: view.bounds.width / 5),
             playbutton.widthAnchor.constraint(equalToConstant: view.bounds.width / 5),
             
-
+            
             albumCoverImage.heightAnchor.constraint(equalToConstant: view.bounds.width / 1.25),
             albumCoverImage.widthAnchor.constraint(equalToConstant: view.bounds.width / 1.25),
             
             lyric.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             lyric.topAnchor.constraint(equalTo: playbutton.bottomAnchor, constant: 5),
             
-//            seekbar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            //            seekbar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             seekbar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             seekbar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             seekbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
