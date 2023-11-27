@@ -52,6 +52,20 @@ class ViewController: UIViewController {
         return name
     }() //가사
     
+    lazy var lyricButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .systemBrown
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.addTarget(self, action: #selector(lyricButton(_:)), for: .touchUpInside)
+        btn.setTitle("전체 가사", for: .normal)
+        return btn
+    }()
+    
+    @objc func lyricButton(_ sender: UIButton){
+        let vc = SongTextViewController()
+        self.present(vc, animated: true)
+    }
+    
     lazy var seekbar: UISlider = {
         let slider = UISlider()
         slider.addTarget(self, action: #selector(sliderValueDidChange(_:)), for: .valueChanged)
@@ -86,10 +100,13 @@ class ViewController: UIViewController {
         let minutes = Int(player.currentTime) / 60
         
         let timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
-     
-        DispatchQueue.main.async { [weak self] in
-            self?.lyric.text = timeString
+        
+        if lyricDic[timeString] != nil{
+            DispatchQueue.main.async { [weak self] in
+                self?.lyric.text = self?.lyricDic[timeString]
+            }
         }
+
     } //노래의 위치에 따라 시간을 파악하는 메서드
 
     
@@ -147,6 +164,10 @@ class ViewController: UIViewController {
         player?.pause()
     }
     
+    var lyricTimeArray = [String]()
+    var lyricArray = [String]()
+    
+    var lyricDic: [String:String] = [:]
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         repository.fetchMusicDate{ [weak self]  ent in
@@ -155,9 +176,18 @@ class ViewController: UIViewController {
                 self?.songName.text = ent.title
                 self?.artistName.text = ent.singer
                 self?.albumName.text = ent.album
-                
                 self?.downloadAudioFromURL(ent.file)
                 
+                
+                //MARK: 딕셔너리에 key= 00:00:00 value = 가사
+                let dividelyric = ent.lyrics.components(separatedBy: "\n")
+                
+                for l in dividelyric{
+                    var str = l
+                    str.removeFirst()
+                    let separatedStr = str.components(separatedBy: "]")
+                    self?.lyricDic[separatedStr[0]] = separatedStr[1]
+                }
             }
             
             
@@ -228,6 +258,7 @@ class ViewController: UIViewController {
         view.addSubview(playbutton)
         view.addSubview(lyric)
         view.addSubview(seekbar)
+        view.addSubview(lyricButton)
         
         NSLayoutConstraint.activate([
             
@@ -264,10 +295,18 @@ class ViewController: UIViewController {
             lyric.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             lyric.topAnchor.constraint(equalTo: playbutton.bottomAnchor, constant: 5),
             
+            
+            lyricButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            lyricButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            lyricButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            lyricButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            lyricButton.heightAnchor.constraint(equalToConstant: 44),
+            
+            
             //            seekbar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             seekbar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             seekbar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            seekbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            seekbar.topAnchor.constraint(equalTo: lyric.bottomAnchor, constant: 5),
             seekbar.heightAnchor.constraint(equalToConstant: 44)
         ])
         
