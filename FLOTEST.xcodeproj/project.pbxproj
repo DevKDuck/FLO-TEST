@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8C42FEE72B146DF9001D1ABC /* SongTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C42FEE62B146DF9001D1ABC /* SongTextViewController.swift */; };
+		8C4B93462B15F5B000A2BC93 /* SongTextViewTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4B93452B15F5B000A2BC93 /* SongTextViewTableCell.swift */; };
 		8C4C2F412B0B38DE00389B70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F402B0B38DE00389B70 /* AppDelegate.swift */; };
 		8C4C2F432B0B38DE00389B70 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F422B0B38DE00389B70 /* SceneDelegate.swift */; };
 		8C4C2F452B0B38DE00389B70 /* PlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F442B0B38DE00389B70 /* PlayViewController.swift */; };
@@ -44,6 +45,7 @@
 
 /* Begin PBXFileReference section */
 		8C42FEE62B146DF9001D1ABC /* SongTextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTextViewController.swift; sourceTree = "<group>"; };
+		8C4B93452B15F5B000A2BC93 /* SongTextViewTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTextViewTableCell.swift; sourceTree = "<group>"; };
 		8C4C2F3D2B0B38DE00389B70 /* FLOTEST.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FLOTEST.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C4C2F402B0B38DE00389B70 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8C4C2F422B0B38DE00389B70 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 				8C4C2F802B0B4C6D00389B70 /* Service.swift */,
 				8C4C2F822B0B4D0C00389B70 /* Model.swift */,
 				8C42FEE62B146DF9001D1ABC /* SongTextViewController.swift */,
+				8C4B93452B15F5B000A2BC93 /* SongTextViewTableCell.swift */,
 			);
 			path = MusicPlay;
 			sourceTree = "<group>";
@@ -313,6 +316,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C4B93462B15F5B000A2BC93 /* SongTextViewTableCell.swift in Sources */,
 				8C42FEE72B146DF9001D1ABC /* SongTextViewController.swift in Sources */,
 				8C4C2F832B0B4D0C00389B70 /* Model.swift in Sources */,
 				8C4C2F7F2B0B482000389B70 /* Repository.swift in Sources */,

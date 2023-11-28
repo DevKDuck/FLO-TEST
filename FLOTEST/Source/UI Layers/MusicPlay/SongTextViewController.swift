@@ -10,11 +10,6 @@ import UIKit
 
 
 class SongTextViewController: UIViewController{
-    var lyricStored: String? //임시 저장
-    
-    var arr = [String]()
-    
-    var lyricDic: [String:String] = [:]
     
     let lyric: UILabel = {
        let label = UILabel()
@@ -24,78 +19,128 @@ class SongTextViewController: UIViewController{
         return label
     }()
     
+    let tableView: UITableView = {
+       let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(SongTextViewTableCell.self, forCellReuseIdentifier: "SongTextViewTableCell")
+        return tableView
+    }()
+    
+    
     var delegate: SendData?
+    
+    var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .darkGray
         setLayoutConstraints()
-//        lyricManufacture()
-        timeFormat()
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        //MARK: currentTime 받아오고 싶으면 필요할때 켜주기
+//        timerPlay()
+//        strLyric()
     }
     
-    func timeFormat(){
-//        delegate = PlayViewController()
-//        if let delegate = delegate{
-//            print("1")
-//            if let test = delegate.sendCurrentTime(){
-//                print("2")
-//                let milliseconds = Int((test.truncatingRemainder(dividingBy: 1)) * 1000)
-//                let seconds = Int(test) % 60
-//                let minutes = Int(test) / 60
-//                
-//                let timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
-//                lyric.text = timeString
-//            }
-//        }
+    func timerPlay(){ //주기적으로 player.currentTime 확인
+        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(timeFormat), userInfo: nil, repeats: true)
+    }
+    @objc func timeFormat(){
         if let playViewController = presentingViewController as? PlayViewController {
             delegate = playViewController
             
             if let currentTime = delegate?.sendCurrentTime() {
-                print("Current time: \(currentTime)")
+                let milliseconds = Int((currentTime.truncatingRemainder(dividingBy: 1)) * 1000)
+                let seconds = Int(currentTime) % 60
+                let minutes = Int(currentTime) / 60
+
+                let timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
+                print(timeString)
             } else {
                 print("Unable to get current time")
             }
-            print("3")
         }
 
     } //노래의 위치에 따라 시간을 파악하는 메서드
     
-    
-    func lyricManufacture(){
-        //MARK: 딕셔너리에 key= 00:00:00 value = 가사
-        guard let lyricStored = lyricStored else {return}
-        let dividelyric = lyricStored.components(separatedBy: "\n")
-        
-        for l in dividelyric{
-            var str = l
-            str.removeFirst()
-            let separatedStr = str.components(separatedBy: "]")
-            arr.append(separatedStr[1])
-        }
-        strLyric()
-    }
+
     
     func strLyric(){
-        var str = ""
-        for i in arr{
-            str += "\(i) \n"
+        if let playViewController = presentingViewController as? PlayViewController {
+            delegate = playViewController
+            
+            
+            guard let delegate = delegate else {return}
+            let lyricArray = delegate.sendTotalLyric()
+            var str = ""
+            for i in lyricArray{
+                str += "\(i) \n"
+            }
+            lyric.text = str
         }
-        lyric.text = str
     }
     
     
     
     private func setLayoutConstraints(){
-        view.addSubview(lyric)
+        view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            lyric.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            lyric.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            lyric.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,constant: 10),
-            lyric.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,constant: 10),
-            lyric.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,constant: -10),
-            lyric.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -10)
+            
+            tableView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            tableView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,constant: 10),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 }
+
+
+extension SongTextViewController: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     
+        if let playViewController = presentingViewController as? PlayViewController {
+            delegate = playViewController
+            
+            
+            guard let delegate = delegate else {return 0}
+            let lyricArray = delegate.sendTotalLyric()
+            return lyricArray.count
+
+        }
+        return 0
+    }
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "SongTextViewTableCell", for: indexPath) as? SongTextViewTableCell else {return UITableViewCell()}
+       
+        if let playViewController = presentingViewController as? PlayViewController {
+            delegate = playViewController
+            
+                    
+            guard let delegate = delegate else {return UITableViewCell()}
+            let lyricArray = delegate.sendTotalLyric()
+            
+            cell.lyric.text = lyricArray[indexPath.row]
+            
+            return cell
+
+        }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 44
+    }
+    
+    
+}
+
+
+
+

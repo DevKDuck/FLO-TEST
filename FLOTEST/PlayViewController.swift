@@ -11,9 +11,21 @@ import AVFoundation
 protocol SendData: AnyObject{
     
     func sendCurrentTime() -> TimeInterval?
+    func sendTotalLyric() -> [String]
+    func sendLyricDic() -> [String:String]
+    
 }
 
 class PlayViewController: UIViewController, SendData{
+    func sendTotalLyric() -> [String] {
+        return lyricArray
+    }
+    
+    func sendLyricDic() -> [String:String] {
+        return lyricDic
+    }
+    
+    
     var player: AVAudioPlayer?
     
     func sendCurrentTime() -> TimeInterval?{
@@ -27,10 +39,7 @@ class PlayViewController: UIViewController, SendData{
     @objc func lyricButton(_ sender: UIButton){
        
         let vc = SongTextViewController()
-        vc.lyricStored = lyricStored
-//        vc.arr = lyricArray
-//        vc.lyricDic = lyricDic
-//        
+       
         vc.delegate = self
         
         self.present(vc, animated: true)
@@ -219,6 +228,7 @@ class PlayViewController: UIViewController, SendData{
                 for l in dividelyric{
                     var str = l
                     str.removeFirst()
+                    
                     let separatedStr = str.components(separatedBy: "]")
                     self?.lyricDic[separatedStr[0]] = separatedStr[1]
                     self?.lyricArray.append(separatedStr[1])
