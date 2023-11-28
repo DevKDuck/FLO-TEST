@@ -23,7 +23,7 @@ class SplashScreenVC: UIViewController{
         setImageConstraints()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
-            let musicPlayVC = ViewController()
+            let musicPlayVC = PlayViewController()
             self.present(musicPlayVC, animated: true)
             
         }

@@ -10,7 +10,7 @@
 		8C42FEE72B146DF9001D1ABC /* SongTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C42FEE62B146DF9001D1ABC /* SongTextViewController.swift */; };
 		8C4C2F412B0B38DE00389B70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F402B0B38DE00389B70 /* AppDelegate.swift */; };
 		8C4C2F432B0B38DE00389B70 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F422B0B38DE00389B70 /* SceneDelegate.swift */; };
-		8C4C2F452B0B38DE00389B70 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F442B0B38DE00389B70 /* ViewController.swift */; };
+		8C4C2F452B0B38DE00389B70 /* PlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F442B0B38DE00389B70 /* PlayViewController.swift */; };
 		8C4C2F482B0B38DE00389B70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C4C2F462B0B38DE00389B70 /* Main.storyboard */; };
 		8C4C2F4B2B0B38DE00389B70 /* FLOTEST.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F492B0B38DE00389B70 /* FLOTEST.xcdatamodeld */; };
 		8C4C2F4D2B0B38E000389B70 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C4C2F4C2B0B38E000389B70 /* Assets.xcassets */; };
@@ -47,7 +47,7 @@
 		8C4C2F3D2B0B38DE00389B70 /* FLOTEST.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FLOTEST.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C4C2F402B0B38DE00389B70 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8C4C2F422B0B38DE00389B70 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		8C4C2F442B0B38DE00389B70 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8C4C2F442B0B38DE00389B70 /* PlayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayViewController.swift; sourceTree = "<group>"; };
 		8C4C2F472B0B38DE00389B70 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8C4C2F4A2B0B38DE00389B70 /* FLOTEST.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FLOTEST.xcdatamodel; sourceTree = "<group>"; };
 		8C4C2F4C2B0B38E000389B70 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -117,7 +117,7 @@
 				8C4C2F772B0B452200389B70 /* Source */,
 				8C4C2F402B0B38DE00389B70 /* AppDelegate.swift */,
 				8C4C2F422B0B38DE00389B70 /* SceneDelegate.swift */,
-				8C4C2F442B0B38DE00389B70 /* ViewController.swift */,
+				8C4C2F442B0B38DE00389B70 /* PlayViewController.swift */,
 				8C4C2F462B0B38DE00389B70 /* Main.storyboard */,
 				8C4C2F4C2B0B38E000389B70 /* Assets.xcassets */,
 				8C4C2F4E2B0B38E000389B70 /* LaunchScreen.storyboard */,
@@ -318,7 +318,7 @@
 				8C4C2F7F2B0B482000389B70 /* Repository.swift in Sources */,
 				8C4C2F812B0B4C6D00389B70 /* Service.swift in Sources */,
 				8C4C2F7B2B0B460100389B70 /* MusicAPI.swift in Sources */,
-				8C4C2F452B0B38DE00389B70 /* ViewController.swift in Sources */,
+				8C4C2F452B0B38DE00389B70 /* PlayViewController.swift in Sources */,
 				8C4C2F4B2B0B38DE00389B70 /* FLOTEST.xcdatamodeld in Sources */,
 				8C4C2F412B0B38DE00389B70 /* AppDelegate.swift in Sources */,
 				8C4C2F742B0B394600389B70 /* SplashScreenVC.swift in Sources */,

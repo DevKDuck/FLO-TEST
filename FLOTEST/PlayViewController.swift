@@ -8,13 +8,44 @@
 import UIKit
 import AVFoundation
 
-class ViewController: UIViewController {
+protocol SendData: AnyObject{
+    
+    func sendCurrentTime() -> TimeInterval?
+}
+
+class PlayViewController: UIViewController, SendData{
+    var player: AVAudioPlayer?
+    
+    func sendCurrentTime() -> TimeInterval?{
+       
+        return player?.currentTime
+    }
+    
+    
+    var lyricStored: String? //임시 저장
+
+    @objc func lyricButton(_ sender: UIButton){
+       
+        let vc = SongTextViewController()
+        vc.lyricStored = lyricStored
+//        vc.arr = lyricArray
+//        vc.lyricDic = lyricDic
+//        
+        vc.delegate = self
+        
+        self.present(vc, animated: true)
+    }
+    
     
     let repository = Repository()
     
     var playURL: String?
-    var player: AVAudioPlayer?
+    
+    
     var timer: Timer?
+    
+    
+    
     
     let albumCoverImage: UIImageView = {
         let img = UIImageView()
@@ -61,10 +92,7 @@ class ViewController: UIViewController {
         return btn
     }()
     
-    @objc func lyricButton(_ sender: UIButton){
-        let vc = SongTextViewController()
-        self.present(vc, animated: true)
-    }
+   
     
     lazy var seekbar: UISlider = {
         let slider = UISlider()
@@ -105,6 +133,7 @@ class ViewController: UIViewController {
             DispatchQueue.main.async { [weak self] in
                 self?.lyric.text = self?.lyricDic[timeString]
             }
+            
         }
 
     } //노래의 위치에 따라 시간을 파악하는 메서드
@@ -144,9 +173,9 @@ class ViewController: UIViewController {
         timer = Timer.scheduledTimer(timeInterval: 0.001, target: self, selector: #selector(timeElapsedAction), userInfo: nil, repeats: true)
         player?.prepareToPlay()
         player?.play()
+    
         
     }
-    
     
     @objc func timeElapsedAction() {
         guard let player = player else { return}
@@ -167,9 +196,12 @@ class ViewController: UIViewController {
     var lyricTimeArray = [String]()
     var lyricArray = [String]()
     
+    
+    
     var lyricDic: [String:String] = [:]
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
         repository.fetchMusicDate{ [weak self]  ent in
             
             DispatchQueue.main.async{
@@ -177,6 +209,8 @@ class ViewController: UIViewController {
                 self?.artistName.text = ent.singer
                 self?.albumName.text = ent.album
                 self?.downloadAudioFromURL(ent.file)
+                self?.lyricStored = ent.lyrics
+                
                 
                 
                 //MARK: 딕셔너리에 key= 00:00:00 value = 가사
@@ -187,6 +221,7 @@ class ViewController: UIViewController {
                     str.removeFirst()
                     let separatedStr = str.components(separatedBy: "]")
                     self?.lyricDic[separatedStr[0]] = separatedStr[1]
+                    self?.lyricArray.append(separatedStr[1])
                 }
             }
             
@@ -314,4 +349,5 @@ class ViewController: UIViewController {
     }
     
 }
+
 
