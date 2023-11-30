@@ -7,9 +7,10 @@
 
 import UIKit
 
-
-
 class SongTextViewController: UIViewController{
+    
+    
+    var hilightIndex = 0
     
     let lyric: UILabel = {
        let label = UILabel()
@@ -39,7 +40,7 @@ class SongTextViewController: UIViewController{
         tableView.dataSource = self
         
         //MARK: currentTime 받아오고 싶으면 필요할때 켜주기
-//        timerPlay()
+        timerPlay()
 //        strLyric()
     }
     
@@ -47,22 +48,9 @@ class SongTextViewController: UIViewController{
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(timeFormat), userInfo: nil, repeats: true)
     }
     @objc func timeFormat(){
-        if let playViewController = presentingViewController as? PlayViewController {
-            delegate = playViewController
-            
-            if let currentTime = delegate?.sendCurrentTime() {
-                let milliseconds = Int((currentTime.truncatingRemainder(dividingBy: 1)) * 1000)
-                let seconds = Int(currentTime) % 60
-                let minutes = Int(currentTime) / 60
-
-                let timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
-                print(timeString)
-            } else {
-                print("Unable to get current time")
-            }
-        }
-
-    } //노래의 위치에 따라 시간을 파악하는 메서드
+        
+        tableView.reloadData()
+    } // 0.001초마다 talbeView를 reload - 수정해야할듯
     
 
     
@@ -124,8 +112,19 @@ extension SongTextViewController: UITableViewDelegate, UITableViewDataSource{
                     
             guard let delegate = delegate else {return UITableViewCell()}
             let lyricArray = delegate.sendTotalLyric()
+           
             
             cell.lyric.text = lyricArray[indexPath.row]
+            if let playingIndex = delegate.sendPlayingTableIndex(){
+                if indexPath.row == playingIndex{
+                    cell.lyric.textColor = .white
+                }
+                else{
+                    cell.lyric.textColor = .lightGray
+                }
+                
+            }
+            
             
             return cell
 
@@ -138,6 +137,14 @@ extension SongTextViewController: UITableViewDelegate, UITableViewDataSource{
         return 44
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let playViewController = presentingViewController as? PlayViewController {
+            delegate = playViewController
+            
+            print(indexPath.row)
+            delegate?.clickTableCell(index: indexPath.row)
+        }
+    }
     
 }
 

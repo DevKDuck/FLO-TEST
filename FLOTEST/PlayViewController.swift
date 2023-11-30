@@ -12,18 +12,45 @@ protocol SendData: AnyObject{
     
     func sendCurrentTime() -> TimeInterval?
     func sendTotalLyric() -> [String]
-    func sendLyricDic() -> [String:String]
+    func sendTimeArray() -> [String]
+    func sendPlayingTableIndex() -> Int?
+    
+    func clickTableCell(index: Int)
     
 }
 
 class PlayViewController: UIViewController, SendData{
+    
+    func sendPlayingTableIndex() -> Int?{
+        return playingTableindex
+    }
+    func sendTimeArray() -> [String] {
+        return timeArray
+    }
+    
     func sendTotalLyric() -> [String] {
         return lyricArray
     }
     
-    func sendLyricDic() -> [String:String] {
-        return lyricDic
+    func clickTableCell(index: Int) {
+        player?.stop()
+        timer?.invalidate()
+        let component = timeArray[index].components(separatedBy: ":")
+        let minute = Int(component[0]) ?? 0
+        let second = Int(component[1]) ?? 0
+        let millsec = Int(component[2]) ?? 0
+              
+        let totalSeconds = minute * 60 + second
+        let totalMilliseconds = TimeInterval(millsec) / 1000.0
+
+        let timeInterval = TimeInterval(totalSeconds) + totalMilliseconds
+
+        player?.currentTime = timeInterval
+        timeFormat()
+        playAudio()
     }
+    
+    
     
     
     var player: AVAudioPlayer?
@@ -130,6 +157,7 @@ class PlayViewController: UIViewController, SendData{
         playAudio()
     }
     
+    var playingTableindex: Int?
     func timeFormat(){
         guard let player = player else { return}
         let milliseconds = Int((player.currentTime.truncatingRemainder(dividingBy: 1)) * 1000)
@@ -138,11 +166,16 @@ class PlayViewController: UIViewController, SendData{
         
         let timeString = String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
         
+        
+        
         if lyricDic[timeString] != nil{
             DispatchQueue.main.async { [weak self] in
                 self?.lyric.text = self?.lyricDic[timeString]
             }
             
+        }
+        if sequenceDic[timeString] != nil{
+            playingTableindex = self.sequenceDic[timeString]
         }
 
     } //노래의 위치에 따라 시간을 파악하는 메서드
@@ -204,10 +237,12 @@ class PlayViewController: UIViewController, SendData{
     
     var lyricTimeArray = [String]()
     var lyricArray = [String]()
+    var timeArray = [String]()
     
     
-    
+    var sequenceDic: [String:Int] = [:]
     var lyricDic: [String:String] = [:]
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
@@ -225,13 +260,15 @@ class PlayViewController: UIViewController, SendData{
                 //MARK: 딕셔너리에 key= 00:00:00 value = 가사
                 let dividelyric = ent.lyrics.components(separatedBy: "\n")
                 
-                for l in dividelyric{
-                    var str = l
+                for l in 0..<dividelyric.count{
+                    var str = dividelyric[l]
                     str.removeFirst()
                     
                     let separatedStr = str.components(separatedBy: "]")
                     self?.lyricDic[separatedStr[0]] = separatedStr[1]
+                    self?.sequenceDic[separatedStr[0]] = l
                     self?.lyricArray.append(separatedStr[1])
+                    self?.timeArray.append(separatedStr[0])
                 }
             }
             
