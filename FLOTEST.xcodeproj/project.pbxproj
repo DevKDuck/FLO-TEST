@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8C42FEE72B146DF9001D1ABC /* SongTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C42FEE62B146DF9001D1ABC /* SongTextViewController.swift */; };
 		8C4B93462B15F5B000A2BC93 /* SongTextViewTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4B93452B15F5B000A2BC93 /* SongTextViewTableCell.swift */; };
+		8C4B93482B18874B00A2BC93 /* SongDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4B93472B18874B00A2BC93 /* SongDelegate.swift */; };
 		8C4C2F412B0B38DE00389B70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F402B0B38DE00389B70 /* AppDelegate.swift */; };
 		8C4C2F432B0B38DE00389B70 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F422B0B38DE00389B70 /* SceneDelegate.swift */; };
 		8C4C2F452B0B38DE00389B70 /* PlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F442B0B38DE00389B70 /* PlayViewController.swift */; };
@@ -22,8 +23,6 @@
 		8C4C2F742B0B394600389B70 /* SplashScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F732B0B394600389B70 /* SplashScreenVC.swift */; };
 		8C4C2F7B2B0B460100389B70 /* MusicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F7A2B0B460100389B70 /* MusicAPI.swift */; };
 		8C4C2F7F2B0B482000389B70 /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F7E2B0B482000389B70 /* Repository.swift */; };
-		8C4C2F812B0B4C6D00389B70 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F802B0B4C6D00389B70 /* Service.swift */; };
-		8C4C2F832B0B4D0C00389B70 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4C2F822B0B4D0C00389B70 /* Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +45,7 @@
 /* Begin PBXFileReference section */
 		8C42FEE62B146DF9001D1ABC /* SongTextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTextViewController.swift; sourceTree = "<group>"; };
 		8C4B93452B15F5B000A2BC93 /* SongTextViewTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTextViewTableCell.swift; sourceTree = "<group>"; };
+		8C4B93472B18874B00A2BC93 /* SongDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDelegate.swift; sourceTree = "<group>"; };
 		8C4C2F3D2B0B38DE00389B70 /* FLOTEST.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FLOTEST.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C4C2F402B0B38DE00389B70 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8C4C2F422B0B38DE00389B70 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -64,8 +64,6 @@
 		8C4C2F782B0B452D00389B70 /* FLO_Splash-Img3x(1242x2688).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FLO_Splash-Img3x(1242x2688).png"; sourceTree = "<group>"; };
 		8C4C2F7A2B0B460100389B70 /* MusicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAPI.swift; sourceTree = "<group>"; };
 		8C4C2F7E2B0B482000389B70 /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
-		8C4C2F802B0B4C6D00389B70 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
-		8C4C2F822B0B4D0C00389B70 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,7 +117,6 @@
 				8C4C2F772B0B452200389B70 /* Source */,
 				8C4C2F402B0B38DE00389B70 /* AppDelegate.swift */,
 				8C4C2F422B0B38DE00389B70 /* SceneDelegate.swift */,
-				8C4C2F442B0B38DE00389B70 /* PlayViewController.swift */,
 				8C4C2F462B0B38DE00389B70 /* Main.storyboard */,
 				8C4C2F4C2B0B38E000389B70 /* Assets.xcassets */,
 				8C4C2F4E2B0B38E000389B70 /* LaunchScreen.storyboard */,
@@ -150,6 +147,7 @@
 		8C4C2F772B0B452200389B70 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				8CB1EC912B19CEC2004E90DA /* SongDelegate */,
 				8C4C2F7C2B0B46DE00389B70 /* UI Layers */,
 				8C4C2F792B0B45DB00389B70 /* API */,
 				8C4C2F782B0B452D00389B70 /* FLO_Splash-Img3x(1242x2688).png */,
@@ -177,12 +175,19 @@
 			isa = PBXGroup;
 			children = (
 				8C4C2F7E2B0B482000389B70 /* Repository.swift */,
-				8C4C2F802B0B4C6D00389B70 /* Service.swift */,
-				8C4C2F822B0B4D0C00389B70 /* Model.swift */,
 				8C42FEE62B146DF9001D1ABC /* SongTextViewController.swift */,
 				8C4B93452B15F5B000A2BC93 /* SongTextViewTableCell.swift */,
+				8C4C2F442B0B38DE00389B70 /* PlayViewController.swift */,
 			);
 			path = MusicPlay;
+			sourceTree = "<group>";
+		};
+		8CB1EC912B19CEC2004E90DA /* SongDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				8C4B93472B18874B00A2BC93 /* SongDelegate.swift */,
+			);
+			path = SongDelegate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,9 +323,8 @@
 			files = (
 				8C4B93462B15F5B000A2BC93 /* SongTextViewTableCell.swift in Sources */,
 				8C42FEE72B146DF9001D1ABC /* SongTextViewController.swift in Sources */,
-				8C4C2F832B0B4D0C00389B70 /* Model.swift in Sources */,
+				8C4B93482B18874B00A2BC93 /* SongDelegate.swift in Sources */,
 				8C4C2F7F2B0B482000389B70 /* Repository.swift in Sources */,
-				8C4C2F812B0B4C6D00389B70 /* Service.swift in Sources */,
 				8C4C2F7B2B0B460100389B70 /* MusicAPI.swift in Sources */,
 				8C4C2F452B0B38DE00389B70 /* PlayViewController.swift in Sources */,
 				8C4C2F4B2B0B38DE00389B70 /* FLOTEST.xcdatamodeld in Sources */,
