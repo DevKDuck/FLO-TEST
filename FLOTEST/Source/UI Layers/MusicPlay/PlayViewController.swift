@@ -251,7 +251,8 @@ class PlayViewController: UIViewController, SongDelegate{
     }
     
     func clickTableCell(index: Int) {
-        player?.stop()
+        guard let player = player else {return}
+        player.stop()
         timer?.invalidate()
         //00:00:00 -> TimeInterval로 변환
         let component = timeArray[index].components(separatedBy: ":")
@@ -264,7 +265,13 @@ class PlayViewController: UIViewController, SongDelegate{
 
         let timeInterval = TimeInterval(totalSeconds) + totalMilliseconds
 
-        player?.currentTime = timeInterval
+        player.currentTime = timeInterval
+        
+        DispatchQueue.main.async{
+            self.seekbar.value = Float(player.currentTime / player.duration)
+        }
+        
+        
         timeFormat()
         playAudio()
     }

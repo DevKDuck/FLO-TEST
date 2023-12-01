@@ -6,7 +6,8 @@
 //
 
 import UIKit
-
+//MARK: 만약에 시간에 알맞은 가사가 없으면 근접한 시간을 보여줘야함
+//MARK: ex - 00:01:00 안녕, 00:02:00 하세요  드래그 해서 현재 진행 시간 00:01:02 면 현재 가사를 찾지 못함
 
 protocol TableReloadDelegate: AnyObject{
     func tableReloadDelegate()
@@ -99,8 +100,6 @@ extension SongTextViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let playViewController = presentingViewController as? PlayViewController {
             delegate = playViewController
-            
-            print(indexPath.row)
             delegate?.clickTableCell(index: indexPath.row)
         }
     }
